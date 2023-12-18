@@ -35,8 +35,8 @@ jobs:
               ```
             smtp_host: 'your_smtp_host'
             smtp_port: 587
-            smtp_username: 'tejaskloud9'
-            smtp_password: 'Tejas_Kloud123'
+            smtp_username: 'your_smtp_username'
+            smtp_password: 'your_smtp_password'
       - name: Continue if no lint errors
         if: ${{ success() }}
         run: echo 'Python code linting successful!'
