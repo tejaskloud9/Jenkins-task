@@ -1,51 +1,30 @@
-name: Python Linting and Push Validation
+name: Lint and Email
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
+    branches:
+      - main  # Adjust the branch as needed
 
 jobs:
   lint:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v4
-          with:
-            python-version: '3.12.1'
-      - name: Install dependencies
-        run: pip install flake8
-      - name: Lint Python code
-        run: flake8
-      - name: Fail if lint errors found
-        if: ${{ always() }}
-        run: exit 1
-      - name: Send email notification
-        uses: dawidd6/action-send-mail@v3
-          if: ${{ failure() }}
-          with:
-            to: 'your_email@example.com'
-            subject: 'Python Code Linting Errors Found'
-            body: |
-              The push contains lint errors! Please fix them before pushing again. Here are the errors:
 
-              ```
-              {{ steps.lint.outputs.annotations | join("\n") }}
-              ```
-            smtp_host: 'your_smtp_host'
-            smtp_port: 587
-            smtp_username: 'your_smtp_username'
-            smtp_password: 'your_smtp_password'
-      - name: Continue if no lint errors
-        if: ${{ success() }}
-        run: echo 'Python code linting successful!'
-    
-  publish:
-    needs: lint
-    if: ${{ success() }}
-    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Push code
-        run: git push
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11 
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+
+      - name: Run lint_email.py
+        env:
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        run: python lint_email.py
