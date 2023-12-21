@@ -1,5 +1,6 @@
 # 2. Write a Python program to get a string made of the first 2 and last 2 characters of a given string. 
 # If the string length is less than 2, return the empty string
+# Testing 21st
 
 def get_first_last_chars(input_string)
 if len(input_string) < 2:
