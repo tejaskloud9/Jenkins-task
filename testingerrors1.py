@@ -3,7 +3,7 @@
 # Testing 21st
 
 def get_first_last_chars(input_string)
-if len(input_string) < 2:
+if len(input_string) < 2
          return ""
                 else:
     return input_string[:2] + input_string[-2:]
