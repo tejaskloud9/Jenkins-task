@@ -2,7 +2,7 @@
 # If the string length is less than 2, return the empty string
 # Testing 21st
 
-def get_first_last_chars(input_string)
+def get_first_last_chars(input_string)::
 if len(input_string) < 2
          return ""
                 else:
