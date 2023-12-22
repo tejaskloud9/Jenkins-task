@@ -3,7 +3,7 @@ name: Lint and Email
 on:
   push:
     branches:
-      - main  # Adjust the branch as needed
+      - main  
 
 jobs:
   lint:
@@ -27,4 +27,17 @@ jobs:
         env:
           SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-        run: python lint_email.py
+        run: |
+          if ! flake8 lint_email.py; then
+            echo "Linting failed. Exiting without pushing to main branch."
+            exit 1
+          fi
+
+      - name: Push to main branch
+        if: success()
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Linting successful"
+          git push origin main
