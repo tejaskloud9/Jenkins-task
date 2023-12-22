@@ -30,7 +30,7 @@ jobs:
         run: |
           if ! flake8 lint_email.py; then
             echo "Linting failed. Exiting without pushing to main branch."
-            exit 1
+            exit 78
           fi
 
       - name: Push to main branch
