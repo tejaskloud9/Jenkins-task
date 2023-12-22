@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
         send_email(author_info, subject, body)
         print("Lint validation failed. Email notification sent to the developer.")
-        exit(1)
+        exit(78)
     else:
         print("Lint validation passed. Code is ready for push.")
         exit(0)
