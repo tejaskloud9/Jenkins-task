@@ -34,7 +34,8 @@ jobs:
           else
             echo "Linting passed. Code is ready for push."
           fi
-          exit 0  # To ensure the workflow stops upon linting failure
+          echo "::error::Linting failed. Exiting without pushing to main branch."
+          exit 1  # Forcefully stop the workflow upon linting failure
 
       - name: Push to main branch
         if: success()
