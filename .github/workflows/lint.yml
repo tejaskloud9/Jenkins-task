@@ -34,6 +34,7 @@ jobs:
           else
             echo "Linting passed. Code is ready for push."
           fi
+          exit 0  # To ensure the workflow stops upon linting failure
 
       - name: Push to main branch
         if: success()
