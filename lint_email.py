@@ -12,7 +12,7 @@ def lint_code():
     result = subprocess.run(["flake8", "--exclude=venv", "."], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     return result.returncode, result.stdout, result.stderr
 
-def send_email(to_email, subject, body):
+def send_email(to_email, subject, body,error_details):
     sender_email = os.environ.get("SMTP_USERNAME")
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
@@ -23,6 +23,7 @@ def send_email(to_email, subject, body):
     message["To"] = to_email
     message["Subject"] = subject
     message.attach(MIMEText(body, "plain"))
+    message.attach(MIMEText(body + "\n\nError Details:\n" + error_details, "plain"))
 
     with smtplib.SMTP(smtp_server, smtp_port) as server:
         server.starttls()
