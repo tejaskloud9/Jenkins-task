@@ -1,9 +1,9 @@
-name: Lint and Email
+name: Lint Check
 
 on:
   push:
     branches:
-      - main  
+      - main 
 
 jobs:
   lint:
@@ -13,35 +13,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.11 
+          python-version: 3.11
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install flake8
 
-      - name: Run lint_email.py
+      - name: Run lint check
+        run: |
+          python lint_email.py
         env:
           SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-        run: |
-          if ! flake8 lint_email.py; then
-            echo "Linting failed. Deleting changes from main branch."
-            git reset --hard HEAD^
-            git push -f origin main
-            exit 78
-          else
-            echo "Linting passed. Code is ready for push."
-          fi
 
-      - name: Push to main branch
-        if: success()
+      - name: Notify on lint failure
+        if: failure()
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git commit -m "Linting successful"
-          git push origin main
+          echo "Lint checks failed. Sending email notification."
+          python lint_email.py
+        env:
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
