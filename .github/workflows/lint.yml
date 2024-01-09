@@ -28,19 +28,14 @@ jobs:
           SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
         run: |
-          if ! flake8 lint_email.py; then
+          if flake8 lint_email.py; then
+            echo "Linting passed. Code is ready for push."
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add .
+            git commit -m "Linting successful"
+            git push origin main
+          else
             echo "Linting failed. Exiting without pushing to main branch."
             exit 78
-          else
-            echo "Linting passed. Code is ready for push."
-            export LINT_PASSED=true
           fi
-
-      - name: Push to main branch
-        if: env.LINT_PASSED == 'true'
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git commit -m "Linting successful"
-          git push origin main
